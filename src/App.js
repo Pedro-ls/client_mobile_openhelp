@@ -2,47 +2,33 @@ import React from 'react';
 
 // components react-native
 import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {ThemeProvider, createTheme} from '@rneui/themed';
+import {Routes} from './routes';
+import {AuthProvider} from './context/auth';
 
-// Screens
-import Home from './screens/Home';
-import Login from './screens/Login';
-import Register from './screens/Register';
-
-// instance components
-const Stack = createNativeStackNavigator();
+const theme = createTheme({
+   components: {
+      Button: {
+         background: '#000',
+      },
+      ListItem: {
+         background: '#000',
+      },
+      Dialog: {
+         backdropStyle: {},
+      },
+   },
+});
 
 function App() {
    return (
-      <NavigationContainer>
-         <Stack.Navigator initialRouteName="Home">
-            <Stack.Screen
-               name="Sign"
-               options={{
-                  header: () => null,
-                  title: 'Entrar',
-               }}
-               component={Login}
-            />
-
-            <Stack.Screen
-               name="Register"
-               options={{
-                  title: 'Criar nova conta',
-               }}
-               component={Register}
-            />
-
-            <Stack.Screen
-               name="Home"
-               options={{
-                  header: () => null,
-                  title: 'Principal',
-               }}
-               component={Home}
-            />
-         </Stack.Navigator>
-      </NavigationContainer>
+      <ThemeProvider theme={theme}>
+         <NavigationContainer>
+            <AuthProvider>
+               <Routes />
+            </AuthProvider>
+         </NavigationContainer>
+      </ThemeProvider>
    );
 }
 

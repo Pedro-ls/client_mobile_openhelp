@@ -1,11 +1,9 @@
-import React from "react";
+import React from 'react';
 
 import TabBar from '../../components/tabs';
 
-function Home(){
-    return (
-       <TabBar />
-    );
+function Home({navigation}) {
+   return <TabBar navigation={navigation} />;
 }
 
-export default Home
+export default Home;
