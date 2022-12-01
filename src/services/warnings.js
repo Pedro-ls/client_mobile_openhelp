@@ -1,4 +1,4 @@
-import {serviceHttp} from '.';
+import { serviceHttp } from '.';
 
 export const endpointsWarnings = {
    getAll: async (page, per_page) => {
@@ -7,7 +7,7 @@ export const endpointsWarnings = {
       );
 
       const res = response.data;
-      console.log(res);
+      console.log(res)
       return res;
    },
    async getImage(id) {

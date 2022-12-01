@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {ListItem, Avatar} from '@rneui/themed';
-import {FlatList, View, Text, TouchableOpacity} from 'react-native';
-import {colors} from '../../../colors';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {endpointsFollows} from '../../../services/follows';
-import {useAuth} from '../../../context/auth';
+import React, { useEffect, useState } from 'react';
+import { ListItem, Avatar } from '@rneui/themed';
+import { FlatList, View, Text, TouchableOpacity } from 'react-native';
+import { colors } from '../../../colors';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { endpointsFollows } from '../../../services/follows';
+import { useAuth } from '../../../context/auth';
 
 function BusesPass() {
    const [companies, setCompanies] = useState(null);
@@ -14,11 +14,11 @@ function BusesPass() {
 
          setCompanies(response.data);
       })();
-   });
+   }, []);
 
-   const {token} = useAuth();
+   const { token } = useAuth();
 
-   function elementItemFlatListHandler({item}) {
+   function elementItemFlatListHandler({ item }) {
       return (
          <ListItem
             containerStyle={{
@@ -31,7 +31,7 @@ function BusesPass() {
             <Avatar
                rounded={true}
                source={{
-                  uri: `http://192.168.10.100:5000/api/companies/image/${item.company.id}`,
+                  uri: `http://192.168.10.103:5000/api/companies/image/${item.company.id}`,
                   headers: {
                      Authorization: 'Bearer ' + token,
                   },
@@ -39,12 +39,12 @@ function BusesPass() {
             />
             <ListItem.Content>
                <ListItem.Title>
-                  <Text style={{color: colors.dark.Azul_01}}>
+                  <Text style={{ color: colors.dark.Azul_01 }}>
                      {item.company.company_name}
                   </Text>
                </ListItem.Title>
                <ListItem.Subtitle>
-                  <Text style={{color: colors.dark.Azul_01}}>
+                  <Text style={{ color: colors.dark.Azul_01 }}>
                      {item.company.city}
                   </Text>
                </ListItem.Subtitle>
@@ -84,7 +84,7 @@ function BusesPass() {
                backgroundColor: '#000',
                paddingVertical: 5,
             }}>
-            <Text style={{color: colors.dark.Azul_01, fontSize: 18}}>
+            <Text style={{ color: colors.dark.Azul_01, fontSize: 18 }}>
                Empresas que eu participo...
             </Text>
          </View>

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
    View,
    Text,
@@ -9,13 +9,13 @@ import {
    Image,
    Alert,
 } from 'react-native';
-import {colors} from '../../colors';
-import {launchImageLibrary} from 'react-native-image-picker';
+import { colors } from '../../colors';
+import { launchImageLibrary } from 'react-native-image-picker';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {endpointsClient} from '../../services/client';
-import {Dialog} from '@rneui/base';
+import { endpointsClient } from '../../services/client';
+import { Dialog } from '@rneui/base';
 
-export function FormClient({object, uri, method, textButtonProps}) {
+export function FormClient({ object, uri, method, textButtonProps }) {
    const [newClient, setNewClient] = useState(object);
    const [image, setImage] = useState(null);
 
@@ -96,7 +96,7 @@ export function FormClient({object, uri, method, textButtonProps}) {
 
          if (result) {
             setStatusRegister(false);
-            Alert.alert('Mensagem: ', result.data.client.username);
+            Alert.alert('Sucesso no Cadastro: ', result.data.client.username + " foi cadastrado com sucesso!");
          }
          setStatusRegister(false);
       }
@@ -202,8 +202,15 @@ export function FormClient({object, uri, method, textButtonProps}) {
             onPress={onSubmitDataClient}>
             <Text style={styles.textButton}>{textButtonProps}</Text>
          </TouchableOpacity>
-         {statusRegister && <Dialog.Loading />}
-      </ScrollView>
+         <Dialog isVisible={statusRegister} backdropStyle={{
+            borderColor: colors.dark.Azul_01,
+            borderWidth: 1
+         }}>
+            {statusRegister && <Dialog.Loading />
+            }
+         </Dialog>
+
+      </ScrollView >
    );
 }
 

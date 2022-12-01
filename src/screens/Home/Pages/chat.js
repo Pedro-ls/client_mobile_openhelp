@@ -1,19 +1,60 @@
-import React from 'react';
-import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useState } from 'react';
+import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '../../../colors';
-export default function Chat() {
+import { endpointsMessages } from '../../../services/messages';
+export default function Chat({ route }) {
+
+    const [messages, setMessages] = useState([])
+    const [messageField, setMessageField] = useState('')
+    const { id } = route?.params;
+
+
+    useEffect(() => {
+        (async () => {
+
+
+            try {
+                const { data } = await endpointsMessages.getAll(Number.parseInt(id))
+
+                setMessages(data)
+            } catch {
+                Alert.alert("Aviso: ", "Erro ao carregar mensagens")
+            }
+
+
+        })()
+    }, [])
     return (
         <SafeAreaView>
+
             <ScrollView>
+                <View style={{
+                    backgroundColor: "#DD6",
+                }}>
+                    <Text style={{
+                        fontSize: 12,
+                        color: "#666444555",
+                        paddingVertical: 10,
+                        paddingLeft: 4
+                    }}>
+                        Reclamação da lotação de ônibus, seus dados só podem ser vistos por você e pela empresa de ônibus
+                    </Text>
+                </View>
                 <View style={{
                     backgroundColor: colors.dark.black_03,
 
                 }}>
-                    <ItemChatMe />
-                    <ItemChatMe />
-                    <ItemChatOuther />
-
+                    {
+                        messages.map((value, index) => {
+                            return String(value.who).toUpperCase() == "CLI" ?
+                                (
+                                    <ItemChatMe key={index} message={value?.content} date={value?.pub_date} />
+                                ) : (
+                                    <ItemChatOuther key={index} message={value?.content} date={value?.pub_date} />
+                                );
+                        })
+                    }
                 </View>
                 <View style={{
                     flexDirection: "row",
@@ -37,6 +78,8 @@ export default function Chat() {
                     }}
                         placeholder="Insira sua mensagem"
                         placeholderTextColor={colors.dark.Azul_02}
+                        value={messageField}
+                        onChangeText={(value) => setMessageField(value)}
                     />
                     <TouchableOpacity style={{
                         color: colors.dark.Azul_01,
@@ -51,7 +94,22 @@ export default function Chat() {
                         borderTopRightRadius: 10,
                         borderBottomEndRadius: 10,
 
-                    }}>
+                    }}
+                        onPress={
+                            async () => {
+                                const date = new Date();
+                                setMessages(messages.concat(
+                                    {
+                                        id: Math.random(),
+                                        content: messageField,
+                                        pub_date: `${date.getDay()}/${date.getMonth()}/${date.getFullYear()}, ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`,
+                                        who: "CLI"
+                                    }
+                                ))
+                                endpointsMessages.register(messageField, id)
+                            }
+                        }
+                    >
                         <Text style={{
                             color: colors.dark.Azul_01,
                             paddingHorizontal: 20,
@@ -64,11 +122,11 @@ export default function Chat() {
 
                 </View>
             </ScrollView>
-        </SafeAreaView>
+        </SafeAreaView >
     )
 }
 
-function ItemChatMe() {
+function ItemChatMe({ message, date }) {
     return (
         <View style={{
             flexDirection: "row",
@@ -85,17 +143,19 @@ function ItemChatMe() {
                 }}
             >
                 <Text>
-                    12-12-2001
+                    {date}
                 </Text>
                 <Text>
-                    teste
+                    {message}
                 </Text>
             </View>
         </View>
     )
 }
 
-function ItemChatOuther() {
+function ItemChatOuther({ date, message }) {
+
+
     return (
         <View style={{
             flexDirection: "row",
@@ -112,10 +172,10 @@ function ItemChatOuther() {
                 }}
             >
                 <Text>
-                    12-12-2001
+                    {date}
                 </Text>
                 <Text>
-                    teste
+                    {message}
                 </Text>
             </View>
         </View>

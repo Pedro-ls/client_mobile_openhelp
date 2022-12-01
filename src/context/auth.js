@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import React, {createContext, useContext, useEffect, useState} from 'react';
-import {serviceHttp} from '../services';
-import {endpointsAuth} from '../services/auth';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { serviceHttp } from '../services';
+import { endpointsAuth } from '../services/auth';
 
 const AuthContext = createContext({});
 
@@ -13,11 +13,12 @@ export function AuthProvider(props) {
    useEffect(() => {
       const loadStorageData = async () => {
          const storageUser = await AsyncStorage.getItem('RNOpenHelp:user');
-         setToken(await AsyncStorage.getItem('RNOpenHelp:token'));
+         const token = await AsyncStorage.getItem('RNOpenHelp:token')
 
-         if (storageUser) {
+
+         if (storageUser && token) {
             setUser(JSON.parse(storageUser));
-            serviceHttp.headers['Authorization'] = 'Bearer ' + token;
+            setToken(token);
          }
          setLoadingScreen(false);
       };
@@ -25,13 +26,13 @@ export function AuthProvider(props) {
    }, []);
 
    async function login(email, password) {
-      const {client, token} = await endpointsAuth.authenticate(email, password);
+      const { client, token } = await endpointsAuth.authenticate(email, password);
 
       if (client && token) {
          setUser(client);
+         setToken(token);
          await AsyncStorage.setItem('RNOpenHelp:user', JSON.stringify(client));
          await AsyncStorage.setItem('RNOpenHelp:token', token);
-         serviceHttp.headers['Authorization'] = 'Bearer ' + token;
       }
    }
 
@@ -43,7 +44,7 @@ export function AuthProvider(props) {
 
    return (
       <AuthContext.Provider
-         value={{signed: !!user, login, logout, user, loadingScreen, token}}>
+         value={{ signed: !!user, login, logout, user, loadingScreen, token }}>
          {props.children}
       </AuthContext.Provider>
    );

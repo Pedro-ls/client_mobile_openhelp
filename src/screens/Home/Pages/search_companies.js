@@ -1,13 +1,13 @@
-import React, {useEffect, useState} from 'react';
-import {ListItem, Avatar} from '@rneui/themed';
-import {FlatList, TextInput, View, Text, TouchableOpacity} from 'react-native';
-import {colors} from '../../../colors';
-import {endpointsCompanies} from '../../../services/companies';
-import {useAuth} from '../../../context/auth';
-import {endpointsFollows} from '../../../services/follows';
+import React, { useEffect, useState } from 'react';
+import { ListItem, Avatar } from '@rneui/themed';
+import { FlatList, TextInput, View, Text, TouchableOpacity, Alert } from 'react-native';
+import { colors } from '../../../colors';
+import { endpointsCompanies } from '../../../services/companies';
+import { useAuth } from '../../../context/auth';
+import { endpointsFollows } from '../../../services/follows';
 
 function SearchCompany() {
-   const {token} = useAuth();
+   const { token } = useAuth();
    useEffect(() => {
       (async () => {
          const response = await endpointsCompanies.getAll(fieldSearch);
@@ -18,11 +18,15 @@ function SearchCompany() {
    const [companies, setCompanies] = useState([]);
    const [fieldSearch, setFieldSearch] = useState('');
 
-   function elementItemFlatListHandler({item}) {
+   function elementItemFlatListHandler({ item }) {
       const handleFollowCompany = () => {
          const id = item.id;
          endpointsFollows.register(id).then(res => {
-            console.log('Registrado');
+            Alert.alert("Sucesso: ", "Você está seguindo " + item.company_name, [
+               {
+                  text: "Aceitar"
+               }
+            ])
          });
       };
       return (
@@ -37,7 +41,7 @@ function SearchCompany() {
             <Avatar
                rounded={true}
                source={{
-                  uri: `http://192.168.10.100:5000/api/companies/image/${item.id}`,
+                  uri: `http://192.168.10.103:5000/api/companies/image/${item.id}`,
                   headers: {
                      Authorization: 'Bearer ' + String(token),
                   },
@@ -45,12 +49,12 @@ function SearchCompany() {
             />
             <ListItem.Content>
                <ListItem.Title>
-                  <Text style={{color: colors.dark.Azul_01}}>
+                  <Text style={{ color: colors.dark.Azul_01 }}>
                      {item.company_name}
                   </Text>
                </ListItem.Title>
                <ListItem.Subtitle>
-                  <Text style={{color: colors.dark.Azul_01}}>{item.city}</Text>
+                  <Text style={{ color: colors.dark.Azul_01 }}>{item.city}</Text>
                </ListItem.Subtitle>
             </ListItem.Content>
             <View>
@@ -109,16 +113,21 @@ function SearchCompany() {
                }}
                placeholderTextColor={colors.dark.Azul_02}
                placeholder="Nome da empresa que está procurando"
-               onChangeText={async value => {
-                  setFieldSearch(fieldSearch);
-                  const response = await endpointsCompanies.getAll(fieldSearch);
+               onChangeText={async (value) => {
+                  setFieldSearch(value);
+                  const response = await endpointsCompanies.getAll(value);
 
                   setCompanies(response.data);
                }}
                value={fieldSearch}
             />
          </View>
-         <View>
+         <View style={
+            {
+               flex: 1,
+               backgroundColor: '#000',
+            }
+         }>
             <FlatList
                contentContainerStyle={{
                   paddingBottom: 80,

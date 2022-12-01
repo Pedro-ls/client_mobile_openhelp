@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
-import {StyleSheet, Image, Text, View, TouchableOpacity} from 'react-native';
-import {colors} from '../../../colors';
-import {Dialog} from '@rneui/themed';
-import {useAuth} from '../../../context/auth';
-function Profile({navigation}) {
+import React, { useState } from 'react';
+import { StyleSheet, Image, Text, View, TouchableOpacity } from 'react-native';
+import { colors } from '../../../colors';
+import { Dialog } from '@rneui/themed';
+import { useAuth } from '../../../context/auth';
+function Profile({ navigation }) {
    const [isDialogDisplay, setIsDialogDisplay] = useState(false);
-   const {user} = useAuth();
+   const { user, token, logout } = useAuth();
 
    return (
       <>
@@ -14,7 +14,10 @@ function Profile({navigation}) {
                <View style={styles.positionPhotoProfile}>
                   <Image
                      source={{
-                        uri: 'https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=386&q=80',
+                        uri: `http://192.168.10.103:5000/api/clients/image/profile`,
+                        headers: {
+                           Authorization: `Bearer ${token}`
+                        }
                      }}
                      style={{
                         width: 140,
@@ -42,9 +45,19 @@ function Profile({navigation}) {
                            backgroundColor: '#ff3300',
                         }}
                         onPress={() => {
+                           logout()
+                        }}>
+                        <Text style={{ color: '#fff' }}>Logout</Text>
+                     </TouchableOpacity>
+                     <TouchableOpacity
+                        style={{
+                           ...styles.buttonDefault,
+                           backgroundColor: '#ff3300',
+                        }}
+                        onPress={() => {
                            navigation.navigate('Update');
                         }}>
-                        <Text style={{color: '#fff'}}>Atualizar</Text>
+                        <Text style={{ color: '#fff' }}>Atualizar</Text>
                      </TouchableOpacity>
                      <TouchableOpacity
                         style={{
@@ -54,7 +67,7 @@ function Profile({navigation}) {
                         onPress={() => {
                            setIsDialogDisplay(true);
                         }}>
-                        <Text style={{color: '#fff'}}>Apagar</Text>
+                        <Text style={{ color: '#fff' }}>Apagar</Text>
                      </TouchableOpacity>
                   </View>
                </View>

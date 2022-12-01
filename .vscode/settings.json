@@ -1,1 +1,13 @@
-{}
+{
+   "window.zoomLevel": 0.3,
+   "window.title": "${dirty}${activeEditorShort}${separator}${rootName}${separator}${appName}",
+   "window.autoDetectColorScheme": true,
+   "window.commandCenter": true,
+   "window.titleSeparator": " | ",
+   "workbench.tree.indent": 15,
+   "interactiveWindow.collapseCellInputCode": "always",
+   "window.closeWhenEmpty": false,
+   "workbench.productIconTheme": "material-product-icons",
+   "editor.formatOnSave": true,
+   "prettier.configPath": "./prettierrc.json"
+}
